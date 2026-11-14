@@ -9,11 +9,25 @@ function art(x){return `<img ${x.k[0]=="w"?'class="w" ':''}src="${IMG[x.k]}" alt
 let st={o:0,c:{}};try{st=JSON.parse(localStorage.getItem("fnchest"))||st}catch(e){}
 const $=i=>document.getElementById(i);
 function save(){try{localStorage.setItem("fnchest",JSON.stringify(st))}catch(e){}}
-function roll(){const t=I.reduce((s,x)=>s+x.w,0);let r=Math.random()*t;for(const x of I){if((r-=x.w)<0)return x}return I[I.length-1]}
+const BOXES=[
+ {n:"67",p:50,c:"#ffc400",cls:"bx1",plate:"67",fs:44,hint:"обычные шансы",m:{common:1,uncommon:1,rare:1,epic:1,legendary:1,mythic:1}},
+ {n:"Лох цветочный",p:150,c:"#ff6bd6",cls:"bx2",plate:"🌸 Лох цветочный",fs:20,hint:"редкие и эпические чаще",m:{common:.4,uncommon:.7,rare:1.3,epic:2.2,legendary:3,mythic:5}},
+ {n:"Эй толстый",p:500,c:"#ff5a36",cls:"bx3",plate:"🍔 Эй толстый",fs:22,hint:"легендарные и мифические в разы чаще",m:{common:.1,uncommon:.2,rare:.6,epic:2.5,legendary:8,mythic:25}}];
+let BOX=0;try{const b=parseInt(localStorage.getItem("fnbox"));if(b>=0&&b<BOXES.length)BOX=b}catch(e){}
+const ew=x=>x.w*BOXES[BOX].m[x.r];window.boxCost=()=>BOXES[BOX].p;
+function roll(){const t=I.reduce((s,x)=>s+ew(x),0);let r=Math.random()*t;for(const x of I){if((r-=ew(x))<0)return x}return I[I.length-1]}
+const RK={mythic:0,legendary:1,epic:2,rare:3,uncommon:4,common:5},pc=v=>v<.1?v.toFixed(3):v.toFixed(1),isW=x=>x.k[0]==="w";
+let CT="i",RF=null;try{CT=localStorage.getItem("fncol")==="w"?"w":"i"}catch(e){}
+function tile(x){const f=st.c[x.k];return `<div class="it ${f?"":"no"}" style="--rc:${R[x.r][0]}"><div class="art">${art(x).replace("<img ","<img loading=\"lazy\" decoding=\"async\" ")}</div>${f?`<b>x${f}</b>`:""}<div class="nmb">${f?x.n:R[x.r][1]}</div></div>`}
 function ui(){$("s1").textContent=st.o;const got=I.filter(x=>st.c[x.k]).length;$("s2").textContent=got;
-const RK={mythic:0,legendary:1,epic:2,rare:3,uncommon:4,common:5};$("gr").innerHTML=I.map((x,i)=>[x,i]).sort((a,b)=>RK[a[0].r]-RK[b[0].r]||a[1]-b[1]).map(a=>a[0]).map(x=>`<div class="it ${st.c[x.k]?"":"no"}" style="--rc:${R[x.r][0]}"><div class="art">${art(x).replace("<img ","<img loading=\"lazy\" decoding=\"async\" ")}</div>${st.c[x.k]?`<b>x${st.c[x.k]}</b>`:""}<div class="nmb">${st.c[x.k]?x.n:R[x.r][1]}</div></div>`).join("");
-const pc=v=>v<.1?v.toFixed(3):v.toFixed(1);const t=I.reduce((s,x)=>s+x.w,0),by={};I.forEach(x=>by[x.r]=(by[x.r]||0)+x.w);
-$("cap").innerHTML=`<h2>Коллекция <em>${got}/${I.length}</em></h2>`+Object.keys(R).filter(k=>by[k]).map(k=>`<div class="chip" style="--rc:${R[k][0]}">${R[k][1]}<i>${pc(by[k]/t*100)}%</i></div>`).join("")}
+ const cnt=a=>a.filter(x=>st.c[x.k]).length,items=I.filter(x=>!isW(x)),weps=I.filter(isW),pool=CT==="w"?weps:items;
+ $("cap").innerHTML=`<h2>Коллекция <em>${got}/${I.length}</em></h2><div class="boxnote">Шансы для сундука «${BOXES[BOX].n}»</div>`;
+ $("ctabs").innerHTML=`<button class="${CT==="i"?"on":""}" data-ct="i">Предметы<i>${cnt(items)}/${items.length}</i></button><button class="${CT==="w"?"on":""}" data-ct="w">Оружие<i>${cnt(weps)}/${weps.length}</i></button>`;
+ const tw=I.reduce((s,x)=>s+ew(x),0),by={};I.forEach(x=>by[x.r]=(by[x.r]||0)+ew(x));
+ const rars=Object.keys(R).filter(k=>pool.some(x=>x.r===k)).sort((a,b)=>RK[a]-RK[b]);if(RF&&!rars.includes(RF))RF=null;
+ $("rfs").innerHTML=`<button class="rf ${RF?"":"on"}" data-rf="">Все</button>`+rars.map(k=>{const p=pool.filter(x=>x.r===k);return `<button class="rf ${RF===k?"on":""}" style="--rc:${R[k][0]}" data-rf="${k}">${R[k][1]}<b>${cnt(p)}/${p.length}</b><i>${pc(by[k]/tw*100)}%</i></button>`}).join("");
+ $("gr").innerHTML=rars.filter(k=>!RF||RF===k).map(k=>{const p=pool.filter(x=>x.r===k),f=cnt(p);
+  return `<section class="sec" style="--rc:${R[k][0]}"><div class="rh"><b>${R[k][1]}</b><span>${f}/${p.length}</span><div class="bar"><u style="width:${p.length?f/p.length*100:0}%"></u></div></div><div class="grid">${p.map(tile).join("")}</div></section>`}).join("")||'<div class="empty">Здесь пока пусто</div>'}
 let busy=false;
 function open(){if(busy)return;if(!spendOpen())return;if(MODE==="cs"){busy=true;$("go").disabled=true;openCS();return}busy=true;$("go").disabled=true;const c=$("chest"),x=roll(),col=R[x.r][0];$("cw").style.setProperty("--bc",col);c.classList.add("charge");
 setTimeout(()=>{c.classList.remove("charge");c.classList.add("open");try{OS.currentTime=0;OS.play()}catch(e){}cOff();$("beam").classList.add("on");$("fl").classList.add("go");if(navigator.vibrate)navigator.vibrate(80);hap("rigid")},1200);
@@ -62,4 +76,15 @@ $("t1").onclick=()=>tab(1);$("t2").onclick=()=>tab(2);$("chb").src=IMG.chb;$("ch
 function wa(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)();[["CS",CS,.6],["OS",OS,.9],["SND",SND,1],["RL",RL,1]].forEach(a=>{const g=AC.createGain();AC.createMediaElementSource(a[1]).connect(g);g.connect(AC.destination);G[a[0]]=[g,a[2]];a[1].volume=1});setGain()}catch(e){AC=null;G={}}}if(AC&&AC.state=="suspended")AC.resume()}
 document.addEventListener("pointerdown",wa);
 $("tot").textContent=I.length;const vs=$("vol");vs.value=Math.round(VOL*100);vs.oninput=()=>{VOL=vs.value/100;if(AC)setGain();else{CS.volume=.6*VOL;OS.volume=.9*VOL;SND.volume=VOL;RL.volume=VOL}$("vi").textContent=VOL==0?"🔇":VOL<.5?"🔉":"🔊";try{localStorage.setItem("fnvol",VOL)}catch(e){}};vs.oninput();ui();cOn();
+
+function applyBox(){const b=BOXES[BOX];$("p1").style.setProperty("--bc2",b.c);
+ ["cw","csw"].forEach(id=>{const e=$(id);e.classList.remove("bx1","bx2","bx3");e.classList.add(b.cls)});
+ $("bplate").textContent=b.plate;$("bplate").style.fontSize=b.fs+"px";$("boxlbl").innerHTML=`<b>${b.n}</b> · ${b.hint}`;
+ [...$("boxes").children].forEach((e,i)=>e.classList.toggle("on",i===BOX))}
+$("boxes").innerHTML=BOXES.map((b,i)=>`<button type="button" class="bx ${b.cls}" data-b="${i}"><span class="bn">${b.n}</span><span class="bp"><svg class="vi" aria-hidden="true"><use href="#vb"/></svg>${b.p}</span></button>`).join("");
+$("boxes").onclick=e=>{const el=e.target.closest(".bx");if(!el||busy)return;BOX=+el.dataset.b;try{localStorage.setItem("fnbox",BOX)}catch(_){}
+ applyBox();ui();hap("light");if(MODE==="cs")buildStrip(null);if(window.vbRefresh)vbRefresh()};
+$("ctabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;CT=b.dataset.ct;RF=null;try{localStorage.setItem("fncol",CT)}catch(_){}ui()};
+$("rfs").onclick=e=>{const b=e.target.closest("button");if(!b)return;RF=b.dataset.rf||null;ui()};
+applyBox();
 if(MODE==="cs")setMode("cs");

@@ -2,7 +2,7 @@
 (function(){
 "use strict";
 var T=window.Telegram&&window.Telegram.WebApp,IN=!!(T&&T.initData),
-KEYS=["fnwallet","fnchest","fnrecent","fnvol","fnmusic","fnclick","fnmode"],CS=IN&&T.CloudStorage;
+KEYS=["fnwallet","fnchest","fnrecent","fnvol","fnmusic","fnclick","fnmode","fnbox","fncol"],CS=IN&&T.CloudStorage;
 window.TG=IN?T:null;
 
 /* вибро-отклик: light|medium|heavy|success|error|warning */
@@ -33,12 +33,12 @@ if(CS){
 function load(src,cb){var s=document.createElement("script");s.src=src;s.async=false;s.onload=cb;s.onerror=function(){fail("Не удалось загрузить "+src)};document.head.appendChild(s)}
 function fail(m){var b=document.getElementById("boot");if(b)b.innerHTML='<div class="bt">'+m+'<br><small>Закрой и открой игру заново</small></div>'}
 function boot(){
- load("js/game.js?v=de31ff3f",function(){
+ load("js/game.js?v=eec841cd",function(){
   /* кнопка «Назад» Telegram возвращает на главную вкладку */
   if(IN&&T.BackButton){var _tab=window.tab;
    window.tab=function(n){_tab(n);try{n===1?T.BackButton.hide():T.BackButton.show()}catch(e){}};
    try{T.BackButton.onClick(function(){window.tab(1)})}catch(e){}}
-  load("js/vb.js?v=614ee0de",function(){setTimeout(function(){try{[MS,SND,OS,RL].forEach(function(a){a.preload="auto";a.load()})}catch(e){}},2500);var b=document.getElementById("boot");if(b){b.classList.add("off");setTimeout(function(){b.remove()},400)}});
+  load("js/vb.js?v=129e19ff",function(){setTimeout(function(){try{[MS,SND,OS,RL].forEach(function(a){a.preload="auto";a.load()})}catch(e){}},2500);var b=document.getElementById("boot");if(b){b.classList.add("off");setTimeout(function(){b.remove()},400)}});
  });
 }
 

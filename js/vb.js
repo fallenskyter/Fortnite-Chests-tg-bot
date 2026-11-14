@@ -1,7 +1,8 @@
 
 (function(){
 "use strict";
-var OPEN_COST=50,START=5000,KEY="fnwallet",MAXV=1e15;
+function OC(){return window.boxCost?window.boxCost():50}
+var START=5000,KEY="fnwallet",MAXV=1e15;
 var UPS=[
 {id:"u1",n:"Улучшенный клик",p:100,b:2,c:"#5fbf2a",d:"Прокачай палец: каждый тап приносит больше V-Bucks."},
 {id:"u2",n:"Суперклик",p:500,b:5,c:"#2fa5f0",d:"Мощный удар по иконке — заметный прирост за клик."},
@@ -55,7 +56,7 @@ function setNum(el,to){var from=el._v==null?to:el._v;el._v=to;cancelAnimationFra
  var t0=performance.now();(function f(t){var k=Math.min(1,(t-t0)/280),v=Math.round(from+(to-from)*(1-Math.pow(1-k,3)));el.textContent=fmt(v);if(k<1)el._r=requestAnimationFrame(f)})(t0)}
 function refresh(bump){
  setNum($("balv"),W.vb);setNum($("vbn"),W.vb);$("cpc").textContent=fmt(cpc());$("aps").textContent=fmt(aps());
- var poor=W.vb<OPEN_COST,n=fmt(Math.floor(W.vb/OPEN_COST));
+ document.querySelectorAll(".pc").forEach(function(e){e.textContent=OC()});var poor=W.vb<OC(),n=fmt(Math.floor(W.vb/OC()));
  ["go","again","togo"].forEach(function(i){$(i).classList.toggle("poor",poor)});$("afford").textContent=n;$("afford2").textContent=n;
  UPS.forEach(function(u){var el=$("up_"+u.id),own=has(u.id),can=!own&&W.vb>=u.p,b=el.querySelector(".ubuy");
   el.classList.toggle("own",own);el.classList.toggle("no",!own&&!can);
@@ -96,9 +97,10 @@ function buyFarm(id){if(lock2)return;var f=FARMS.filter(function(z){return z.id=
  lock2=true;W.vb=Math.max(0,W.vb-c);W.farms[id]=fcount(id)+1;flush();refresh(true);
  anim($("fm_"+id),"flash");hap("success");toast(f.n+" ×"+fcount(id)+"! Авто: +"+fmt(aps())+"/сек","good");
  setTimeout(function(){lock2=false},250)}
+window.vbRefresh=function(){refresh(false)};
 window.spendOpen=function(){
- if(W.vb<OPEN_COST){toast("Недостаточно V-Bucks! Нужно "+OPEN_COST+", у тебя "+fmt(W.vb),"bad",{t:"Заработать",f:function(){tab(3)}});anim($("bal"),"bad");hap("error");return false}
- W.vb=Math.max(0,W.vb-OPEN_COST);flush();refresh(true);hap("medium");return true};
+ if(W.vb<OC()){toast("Недостаточно V-Bucks! Нужно "+OC()+", у тебя "+fmt(W.vb),"bad",{t:"Заработать",f:function(){tab(3)}});anim($("bal"),"bad");hap("error");return false}
+ W.vb=Math.max(0,W.vb-OC());flush();refresh(true);hap("medium");return true};
 var REC=[];try{REC=JSON.parse(localStorage.getItem("fnrecent"))||[]}catch(e){REC=[]}
 if(!Array.isArray(REC))REC=[];REC=REC.filter(function(k){return I.some(function(x){return x.k===k})}).slice(0,7);
 function recRender(){$("recw").style.display=REC.length?"":"none";
