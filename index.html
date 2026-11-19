@@ -245,8 +245,8 @@ html,body{overscroll-behavior:none}
 .modes button:disabled{opacity:.55;cursor:default}
 #csw{width:100%;max-width:900px;margin:30px 0 10px}
 .rl{position:relative;overflow:hidden;height:190px;background:linear-gradient(#050a2acc,#0a1550cc);border-top:3px solid #ffffff22;border-bottom:3px solid #ffffff22;box-shadow:inset 0 0 40px #000a}
-.strip{position:absolute;left:0;top:18px;display:flex;gap:8px;will-change:transform}
-.cc{flex:none;position:relative;width:128px;height:150px;background:#0a1033;background:radial-gradient(120% 90% at 50% 25%,color-mix(in srgb,var(--rc) 55%,#0a1550),#0a1033 90%);border-bottom:5px solid var(--rc);box-shadow:0 4px 10px #0008}
+.strip{position:absolute;left:0;top:18px;display:flex;gap:var(--gap,8px);will-change:transform}
+.cc{flex:none;position:relative;width:var(--cw,128px);height:var(--ch,150px);background:#0a1033;background:radial-gradient(120% 90% at 50% 25%,color-mix(in srgb,var(--rc) 55%,#0a1550),#0a1033 90%);border-bottom:5px solid var(--rc);box-shadow:0 4px 10px #0008}
 .cc .ca{position:absolute;inset:0 0 28px 0;display:flex;align-items:center;justify-content:center;padding:6px}
 .cc img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block}
 .cc img.w{object-fit:contain;padding:2px;object-position:center}
@@ -280,7 +280,7 @@ html,body{overscroll-behavior:none}
 /* коллекция по редкости */
 .boxnote{width:100%;text-align:center;color:var(--mu);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
 .ctabs{display:flex;gap:10px;justify-content:center;margin:6px 12px 4px;flex-wrap:wrap}
-.ctabs button{border:2px solid #2f48c9;background:#0b1450cc;color:#9fb4ff;padding:8px 20px 6px;font-size:18px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transform:skewX(-8deg);font-family:inherit;touch-action:manipulation}
+.ctabs button{border:2px solid #2f48c9;background:#0b1450cc;color:#9fb4ff;padding:8px 14px 6px;font-size:18px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transform:skewX(-8deg);font-family:inherit;touch-action:manipulation}
 .ctabs button.on{background:linear-gradient(#ffe45c,#ffc400);color:#111;border-color:#fff;box-shadow:0 4px 0 #a87800}
 .ctabs i{font-style:normal;opacity:.75;margin-left:6px;font-size:.85em}
 .rfs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px 12px 4px;max-width:900px;margin:0 auto}
@@ -295,6 +295,52 @@ html,body{overscroll-behavior:none}
 .rh .bar u{display:block;height:100%;background:var(--rc)}
 .empty{text-align:center;padding:40px;color:var(--mu)}
 .it:not(.no) .nmb{border-top-color:var(--rc);color:#fff}
+
+/* несколько кейсов сразу */
+#rls{display:flex;flex-direction:column;gap:10px}
+.rl.sm{height:128px}.rl.sm .strip{top:12px}
+.rl.sm .cc .ca{inset:0 0 20px 0;padding:3px}.rl.sm .cc .cn{height:20px;font-size:9px;padding:0 2px}
+.rl.sm .mk::before,.rl.sm .mk::after{border-width:7px;margin-left:-7px}
+.cnt{display:flex;gap:6px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:12px}
+.cnt span{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin-right:2px}
+.cnt button{border:2px solid #2f48c9;background:#0b1450cc;color:#9fb4ff;padding:6px 10px 4px;font-size:18px;font-weight:700;cursor:pointer;transform:skewX(-8deg);font-family:inherit;touch-action:manipulation;min-width:40px}
+.cnt button.on{background:linear-gradient(#ffe45c,#ffc400);color:#111;border-color:#fff;box-shadow:0 4px 0 #a87800}
+.card.mc{width:min(94vw,540px);aspect-ratio:auto;border:0;background:none;box-shadow:none;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.mi{position:relative;width:calc((100% - 20px)/3);max-width:160px;aspect-ratio:3/4;border:3px solid var(--rc);background:radial-gradient(120% 90% at 50% 30%,var(--rc),#0a1033 170%);box-shadow:0 0 18px var(--rc);overflow:hidden;animation:minin .45s cubic-bezier(.2,1.5,.4,1) both}
+.mi .ma{position:absolute;inset:0 0 26px 0;display:flex;align-items:center;justify-content:center;padding:4px}
+.mi img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block;border-radius:0}.mi img.w{object-fit:contain}
+.mi .mn{position:absolute;left:0;right:0;bottom:0;height:26px;display:flex;align-items:center;justify-content:center;padding:0 3px;font-size:11px;line-height:1;text-align:center;text-transform:uppercase;background:#000b}
+
+/* 9 кейсов: прокручиваемый выбор */
+.boxes{overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;max-width:560px;padding:4px 6px 8px;margin:10px 0 0}
+.boxes::-webkit-scrollbar{display:none}
+.bx{flex:0 0 112px;scroll-snap-align:center}
+#cw.rb #chest .bd,#cw.rb #chest .ld{animation:rbw 5s linear infinite}
+@keyframes rbw{from{filter:hue-rotate(0deg) saturate(1.8) brightness(1.1)}to{filter:hue-rotate(360deg) saturate(1.8) brightness(1.1)}}
+@media (prefers-reduced-motion:reduce){#cw.rb #chest .bd,#cw.rb #chest .ld{animation:none;filter:hue-rotate(300deg) saturate(1.8)}}
+#cw #chest .bd,#cw #chest .ld{filter:var(--tint,none)}
+#cw #chest:not(.open):not(.charge){filter:drop-shadow(0 0 22px color-mix(in srgb,var(--bc2,#ffc400) 45%,transparent))}
+#csw .rl{border-color:color-mix(in srgb,var(--bc2,#ffffff) 45%,transparent)}
+.boxlbl small{display:block;margin-top:4px;color:var(--mu);font-size:12px;letter-spacing:.08em}
+/* продажа предметов */
+.it:not(.no){cursor:pointer}
+.sdup{display:block;margin:12px auto 0;border:0;background:#ff5a36;color:#fff;padding:8px 22px 6px;font-size:17px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transform:skewX(-8deg);box-shadow:0 4px 0 #a02a10;font-family:inherit;touch-action:manipulation}
+.sdup.armed,.sb.armed{background:#ff2d55;animation:armp .6s infinite alternate}
+@keyframes armp{to{filter:brightness(1.35)}}
+#sell{position:fixed;inset:0;z-index:14;background:rgba(0,0,10,.82);display:flex;align-items:center;justify-content:center;padding:16px}
+#sell.hide{display:none}
+.sp{position:relative;width:min(92vw,380px);max-height:92vh;overflow:auto;padding:18px 16px 16px;border-left:6px solid var(--rc);background:#0a1033f5;box-shadow:0 20px 50px #000c;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.sx{position:absolute;right:8px;top:4px;border:0;background:none;color:#9fb4ff;font-size:24px;cursor:pointer;padding:6px}
+.spa{width:150px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border:3px solid var(--rc);background:radial-gradient(120% 90% at 50% 30%,var(--rc),#0a1033 170%);overflow:hidden;box-shadow:0 0 24px var(--rc)}
+.spa img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block}.spa img.w{object-fit:contain;padding:4px}
+.spn{font-size:24px;font-weight:700;text-transform:uppercase;font-style:italic;line-height:1.05}
+.spr{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--rc)}
+.spp{display:flex;align-items:center;gap:6px;font-size:18px;color:var(--mu);margin-bottom:4px}.spp b{color:var(--yel);font-size:22px}
+.sb{width:100%;border:0;background:var(--yel);color:#000;padding:10px 12px 8px;font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transform:skewX(-6deg);box-shadow:0 4px 0 #b8a800;font-family:inherit;touch-action:manipulation}
+.sb.sec{background:#1b3fd1;color:#fff;box-shadow:0 4px 0 #0c1f7a}.sb.danger{background:#ff5a36;color:#fff;box-shadow:0 4px 0 #a02a10}
+.spw{font-size:12px;color:#ff9aa8;letter-spacing:.06em;text-transform:uppercase}
+.ok.sellb span{background:#ff5a36;color:#fff;box-shadow:0 5px 0 3px #000;white-space:nowrap}
+.ok.sellb.armed span{background:#ff2d55}
 </style></head><body>
 <div id="boot"><div class="bt">Загрузка…</div></div>
 <div class="amb" aria-hidden="true"><i style="--x:43%;--s:5px;--t:17s;--d:-20s"></i><i style="--x:8%;--s:4px;--t:19s;--d:-3s"></i><i style="--x:48%;--s:8px;--t:11s;--d:-16s"></i><i style="--x:29%;--s:4px;--t:12s;--d:-13s"></i><i style="--x:55%;--s:4px;--t:14s;--d:-2s"></i><i style="--x:72%;--s:7px;--t:11s;--d:-18s"></i><i style="--x:17%;--s:5px;--t:21s;--d:-20s"></i><i style="--x:76%;--s:4px;--t:20s;--d:-18s"></i><i style="--x:52%;--s:4px;--t:14s;--d:-1s"></i><i style="--x:73%;--s:5px;--t:15s;--d:-13s"></i><i style="--x:20%;--s:8px;--t:12s;--d:-18s"></i><i style="--x:41%;--s:8px;--t:21s;--d:-5s"></i><i style="--x:15%;--s:8px;--t:20s;--d:-20s"></i><i style="--x:26%;--s:6px;--t:12s;--d:-17s"></i><i style="--x:93%;--s:4px;--t:20s;--d:-1s"></i><i style="--x:81%;--s:5px;--t:18s;--d:-17s"></i></div>
@@ -311,22 +357,23 @@ html,body{overscroll-behavior:none}
 <div class="boxes" id="boxes" role="group" aria-label="Выбор сундука"></div>
 <div class="boxlbl" id="boxlbl"></div>
 <div class="modes" role="group" aria-label="Режим открытия"><button id="m1" class="on" type="button">🎁 Сундук</button><button id="m2" type="button">🎯 Кейс</button></div>
-<div id="csw" class="hide"><div class="rl" id="rl"><div class="strip" id="strip"></div><div class="mk"></div><div class="fadeL"></div><div class="fadeR"></div></div><div class="rlh">Шансы такие же, как у сундука</div></div>
+<div id="csw" class="hide"><div id="rls"></div><div class="rlh">Шансы такие же, как у сундука</div><div class="cnt" id="cnt"></div></div>
 <div id="cw"><div class="beam" id="beam"></div><div class="bplate" id="bplate"></div><div class="tip"><span>Открытие: <b class="pc">50</b> V-Bucks</span><small>Хватит на <span id="afford2">0</span></small></div><div id="chest"><div class="glow"></div><img class="bd" id="chb" alt=""><img class="ld" id="chl" alt=""></div></div>
-<button class="btn" id="go"><span>Открыть<em class="cost"><svg class="vi" aria-hidden="true"><use href="#vb"/></svg><span class="pc">50</span></em></span></button>
+<button class="btn" id="go"><span>Открыть<em class="cost"><svg class="vi" aria-hidden="true"><use href="#vb"/></svg><b class="pc">50</b></em></span></button>
 <div class="stats"><span>Открыто<b id="s1">0</b></span><span>Найдено<b><span id="s2" style="font-size:inherit;color:inherit;background:none;border:0;padding:0;transform:none;display:inline">0</span>/<span id="tot" style="font-size:inherit;color:inherit;background:none;border:0;padding:0;transform:none;display:inline"></span></b></span><span>Хватит на<b id="afford">0</b></span></div>
 <div class="recw" id="recw" style="display:none"><div class="recl">Последние находки</div><div class="rec" id="rec"></div></div>
 <div class="vol"><span id="vi">🔊</span><input id="vol" type="range" min="0" max="100" step="1" aria-label="Громкость"></div></div>
-<div id="p2" class="hide"><div class="cap" id="cap"></div><div class="ctabs" id="ctabs"></div><div class="rfs" id="rfs"></div><div class="secs" id="gr"></div></div>
+<div id="p2" class="hide"><div class="cap" id="cap"></div><div class="ctabs" id="ctabs"></div><button class="sdup" id="sdup" type="button" style="display:none"></button><div class="rfs" id="rfs"></div><div class="secs" id="gr"></div></div>
 <div id="p3" class="hide"><h1><small>Кликер</small>V-Bucks</h1>
 <div id="vbstage"><button id="vbtn" type="button" aria-label="Получить V-Bucks"><span class="cflt"><svg class="coin" viewBox="0 0 100 100" aria-hidden="true"><use href="#vb"/></svg></span></button><div id="fx"></div></div>
 <div class="vbbal">Баланс: <b id="vbn">0</b> V-Bucks</div>
 <div class="sub" style="margin-top:8px">Нажми, чтобы получить V-Bucks</div>
-<div class="ctarow"><div class="chip2">За клик<b>+<span id="cpc">1</span></b></div><div class="chip2">Авто<b>+<span id="aps">0</span>/сек</b></div><button class="btn2" id="togo" type="button">К сундукам <em class="cost"><svg class="vi" aria-hidden="true"><use href="#vb"/></svg><span class="pc">50</span></em></button><button class="tgl" id="snd" type="button" aria-pressed="true">Звук клика</button></div>
+<div class="ctarow"><div class="chip2">За клик<b>+<span id="cpc">1</span></b></div><div class="chip2">Авто<b>+<span id="aps">0</span>/сек</b></div><button class="btn2" id="togo" type="button">К сундукам <em class="cost"><svg class="vi" aria-hidden="true"><use href="#vb"/></svg><b class="pc">50</b></em></button><button class="tgl" id="snd" type="button" aria-pressed="true">Звук клика</button></div>
 <div class="shh">Магазин <em>улучшений</em></div>
 <div class="shop" id="shop"></div>
 <div class="shh">Авто<em>доход</em></div><div class="sub" style="margin-top:2px;text-align:center">Приносят V-Bucks сами, даже когда ты не кликаешь</div>
 <div class="shop" id="farm"></div></div>
-<div id="ov"><div class="rays"></div><div id="rc"></div><div id="fl"></div><div class="nm" id="rn"></div><div class="rr" id="rr"></div><div class="acts"><button class="ok" id="ok"><span>Забрать</span></button><button class="ok again" id="again"><span>Ещё раз<em class="cost"><svg class="vi" aria-hidden="true"><use href="#vb"/></svg><span class="pc">50</span></em></span></button></div></div>
-<script src="js/tg.js?v=f2360465"></script>
+<div id="ov"><div class="rays"></div><div id="rc"></div><div id="fl"></div><div class="nm" id="rn"></div><div class="rr" id="rr"></div><div class="acts"><button class="ok" id="ok"><span>Забрать</span></button><button class="ok again" id="again"><span>Ещё раз<em class="cost"><svg class="vi" aria-hidden="true"><use href="#vb"/></svg><b class="pc">50</b></em></span></button><button class="ok sellb" id="sellnow" type="button"><span></span></button></div></div>
+<div id="sell" class="hide"></div>
+<script src="js/tg.js?v=8a2d49d7"></script>
 </body></html>

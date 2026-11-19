@@ -4,23 +4,23 @@
 function OC(){return window.boxCost?window.boxCost():50}
 var START=5000,KEY="fnwallet",MAXV=1e15;
 var UPS=[
-{id:"u1",n:"Улучшенный клик",p:100,b:2,c:"#5fbf2a",d:"Прокачай палец: каждый тап приносит больше V-Bucks."},
-{id:"u2",n:"Суперклик",p:500,b:5,c:"#2fa5f0",d:"Мощный удар по иконке — заметный прирост за клик."},
-{id:"u3",n:"Мегаклик",p:2000,b:15,c:"#b45cf5",d:"Серьёзный буст для настоящих фармеров V-Bucks."},
-{id:"u4",n:"Ультраклик",p:10000,b:50,c:"#f5a623",d:"Каждое нажатие — как вскрытие целого хранилища."},
-{id:"u5",n:"Бог кликера",p:50000,b:200,c:"#ffc400",d:"Легендарная мощь. V-Bucks льются рекой."}];
+{id:"u1",n:"Улучшенный клик",p:250,b:1,c:"#5fbf2a",d:"Прокачай палец: каждый тап приносит больше V-Bucks."},
+{id:"u2",n:"Суперклик",p:1500,b:3,c:"#2fa5f0",d:"Мощный удар по иконке — заметный прирост за клик."},
+{id:"u3",n:"Мегаклик",p:8000,b:8,c:"#b45cf5",d:"Серьёзный буст для настоящих фармеров V-Bucks."},
+{id:"u4",n:"Ультраклик",p:40000,b:25,c:"#f5a623",d:"Каждое нажатие — как вскрытие целого хранилища."},
+{id:"u5",n:"Бог кликера",p:200000,b:80,c:"#ffc400",d:"Легендарная мощь. V-Bucks льются рекой."}];
 var FARMS=[
-{id:"f1",n:"Скин-фермер",r:1,p:200,c:"#5fbf2a",d:"Тихо фармит V-Bucks за тебя."},
-{id:"f2",n:"Добытчик",r:5,p:1500,c:"#2fa5f0",d:"Копает V-Bucks без перерыва."},
-{id:"f3",n:"Хранилище",r:25,p:10000,c:"#b45cf5",d:"Целое хранилище, которое работает на тебя."},
-{id:"f4",n:"Фабрика V-Bucks",r:120,p:75000,c:"#ffc400",d:"Промышленные объёмы V-Bucks."}];
+{id:"f1",n:"Скин-фермер",r:1,p:500,c:"#5fbf2a",d:"Тихо фармит V-Bucks за тебя."},
+{id:"f2",n:"Добытчик",r:4,p:4000,c:"#2fa5f0",d:"Копает V-Bucks без перерыва."},
+{id:"f3",n:"Хранилище",r:20,p:30000,c:"#b45cf5",d:"Целое хранилище, которое работает на тебя."},
+{id:"f4",n:"Фабрика V-Bucks",r:100,p:250000,c:"#ffc400",d:"Промышленные объёмы V-Bucks."}];
 var W={vb:START,ups:[],farms:{}},fresh=false,lock=false,lock2=false,tt,sv,combo=0,lastTap=0,lastTing=0,SOUND=true;
 try{SOUND=localStorage.getItem("fnclick")!=="0"}catch(e){}
 var RM=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
 function fmt(n){return n.toLocaleString("ru-RU")}
 function has(id){return W.ups.indexOf(id)>-1}
 function fcount(id){return W.farms[id]||0}
-function fcost(f){return Math.ceil(f.p*Math.pow(1.15,fcount(f.id)))}
+function fcost(f){return Math.ceil(f.p*Math.pow(1.3,fcount(f.id))-1e-6)}
 function cpc(){var s=1;UPS.forEach(function(u){if(has(u.id))s+=u.b});return s}
 function aps(){var s=0;FARMS.forEach(function(f){s+=f.r*fcount(f.id)});return s}
 function flush(){try{localStorage.setItem(KEY,JSON.stringify({v:2,vb:W.vb,cpc:cpc(),aps:aps(),ups:W.ups,farms:W.farms}))}catch(e){}}
@@ -56,7 +56,7 @@ function setNum(el,to){var from=el._v==null?to:el._v;el._v=to;cancelAnimationFra
  var t0=performance.now();(function f(t){var k=Math.min(1,(t-t0)/280),v=Math.round(from+(to-from)*(1-Math.pow(1-k,3)));el.textContent=fmt(v);if(k<1)el._r=requestAnimationFrame(f)})(t0)}
 function refresh(bump){
  setNum($("balv"),W.vb);setNum($("vbn"),W.vb);$("cpc").textContent=fmt(cpc());$("aps").textContent=fmt(aps());
- document.querySelectorAll(".pc").forEach(function(e){e.textContent=OC()});var poor=W.vb<OC(),n=fmt(Math.floor(W.vb/OC()));
+ document.querySelectorAll(".pc").forEach(function(e){e.textContent=fmt(OC())});var poor=W.vb<OC(),n=fmt(Math.floor(W.vb/OC()));
  ["go","again","togo"].forEach(function(i){$(i).classList.toggle("poor",poor)});$("afford").textContent=n;$("afford2").textContent=n;
  UPS.forEach(function(u){var el=$("up_"+u.id),own=has(u.id),can=!own&&W.vb>=u.p,b=el.querySelector(".ubuy");
   el.classList.toggle("own",own);el.classList.toggle("no",!own&&!can);
@@ -85,7 +85,8 @@ function fx(cx,cy,g){var layer=$("fx"),r=$("vbstage").getBoundingClientRect(),x=
   p.style.left=x+"px";p.style.top=y+"px";p.style.setProperty("--dx",Math.cos(a)*d+"px");p.style.setProperty("--dy",Math.sin(a)*d+"px");
   p.style.setProperty("--c",cols[i%3]);if(i%3==2)p.style.background="#fff22d";layer.appendChild(p);
   (function(q){setTimeout(function(){q.remove()},700)})(p)}}
-function tap(cx,cy){var g=cpc(),n=performance.now();combo=n-lastTap<400?combo+1:0;lastTap=n;
+var lastOk=0;
+function tap(cx,cy){var n0=performance.now();if(n0-lastOk<90)return;lastOk=n0;var g=cpc(),n=performance.now();combo=n-lastTap<400?combo+1:0;lastTap=n;
  W.vb=Math.min(W.vb+g,MAXV);refresh(false);anim($("vbtn"),"hit");fx(cx,cy,g);ting();hap("light");saveSoon()}
 function buy(id){if(lock)return;var u=UPS.filter(function(z){return z.id===id})[0];if(!u||has(id))return;
  if(W.vb<u.p){toast("Не хватает "+fmt(u.p-W.vb)+" V-Bucks для «"+u.n+"»","bad");anim($("bal"),"bad");hap("error");return}
@@ -98,6 +99,8 @@ function buyFarm(id){if(lock2)return;var f=FARMS.filter(function(z){return z.id=
  anim($("fm_"+id),"flash");hap("success");toast(f.n+" ×"+fcount(id)+"! Авто: +"+fmt(aps())+"/сек","good");
  setTimeout(function(){lock2=false},250)}
 window.vbRefresh=function(){refresh(false)};
+window.vbAdd=function(n){W.vb=Math.min(W.vb+Math.max(0,Math.floor(n)),MAXV);flush();refresh(true)};
+window.vbToast=toast;
 window.spendOpen=function(){
  if(W.vb<OC()){toast("Недостаточно V-Bucks! Нужно "+OC()+", у тебя "+fmt(W.vb),"bad",{t:"Заработать",f:function(){tab(3)}});anim($("bal"),"bad");hap("error");return false}
  W.vb=Math.max(0,W.vb-OC());flush();refresh(true);hap("medium");return true};
